@@ -1,0 +1,94 @@
+  - name: sma_hub
+    type: tcp
+    host: 192.168.1.23
+    port: 502
+    sensors:
+        - name: SMA_Nameplate_SerNum
+          data_type: int32
+          slave: 3
+          address: 30005
+          count: 2          
+          
+        - name: SMA_Nameplate_Model
+          data_type: int32
+          slave: 3
+          address: 30053
+          count: 2          
+          
+        - name: sma_status
+          data_type: int32
+          unit_of_measurement: status
+          slave: 3
+          address: 30201
+          count: 2
+
+        - name: sma_Inverter_WMax
+          data_type: int32
+          unit_of_measurement: w
+          slave: 3
+          address: 30233
+          count: 2
+
+        - name: SMA_Total
+          data_type: int64
+          unit_of_measurement: Wh
+          slave: 3
+          address: 30513
+          count: 4
+
+        - name: sma_power
+          data_type: int32
+          device_class: 'power'
+          unit_of_measurement: W
+          slave: 3
+          address: 30775
+          count: 2
+
+        - name: SMA Power L1
+          data_type: int32
+          unit_of_measurement: W
+          slave: 3
+          address: 30779
+          count: 2
+      
+        - name: SMA Power L2
+          data_type: int32
+          unit_of_measurement: W
+          slave: 3
+          address: 30781
+          count: 2
+          
+        - name: SMA Power L3
+          data_type: int32
+          unit_of_measurement: W
+          slave: 3
+          address: 30777
+          count: 2
+          
+        - name: grid_voltage
+          data_type: int32
+          device_class: 'voltage'
+          unit_of_measurement: V
+          slave: 3 
+          address: 30783
+          count: 2
+          scale: 0.01
+          precision: 2
+          
+        - name: grid_frequency
+          data_type: int32
+          unit_of_measurement: Hz
+          slave: 3 
+          address: 30803
+          count: 2
+          scale: 0.01
+          precision: 2          
+          
+        - name: sma_tempurature
+          data_type: int32
+          device_class: 'temperature'
+          unit_of_measurement: °C
+          slave: 3
+          address: 30953
+          count: 2
+          scale: 0.1
