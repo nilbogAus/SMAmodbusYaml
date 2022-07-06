@@ -3,24 +3,31 @@
     host: 192.168.1.23
     port: 502
     sensors:
+        &register
         - name: SMA_Nameplate_SerNum
           data_type: int32
           slave: 3
           address: 30005
           count: 2          
           
+          <<: *register
         - name: SMA_Nameplate_Model
-          data_type: int32
-          slave: 3
           address: 30053
-          count: 2          
-          
+
         - name: sma_status
           data_type: int32
           unit_of_measurement: status
           slave: 3
           address: 30201
           count: 2
+#          value_template: >
+#            {% set mapper = {
+#              303: 'Off',
+#              307: 'Ok',
+#              308: 'On',
+#              311: 'Open'
+#            } %}
+#            "{{ mapper[value] if value in mapper else value }}"
 
         - name: sma_Inverter_WMax
           data_type: int32
@@ -28,6 +35,7 @@
           slave: 3
           address: 30233
           count: 2
+          scan_interval: 0  # dont keep scanning 
 
         - name: SMA_Total
           data_type: int64
