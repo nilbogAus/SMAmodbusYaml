@@ -7,7 +7,7 @@ To get this working you may have to activate Modbus TCP for the inverter. I had 
 
 NB: At night some SMA inverters go into low power mode and some Modbus registers become nonsensical. It is probably best to try to get this working the first time in daylight.
 
-#Setup
+# Setup
 
 add the file modbus.yaml to config folder (where configuration.yaml is)
 
