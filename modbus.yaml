@@ -3,16 +3,134 @@
     host: 192.168.1.23
     port: 502
     sensors:
-        &register
-        - name: SMA_Nameplate_SerNum
-          data_type: int32
-          slave: 3
+        - name: SMA Serial number
           address: 30005
+          slave: 3
           count: 2          
+          #device_class: none
+          #unit_of_measurement: w          
+          data_type: int32
+          scan_interval: 0  # dont keep scanning 
+
+        - name: SMA Total yield
+          address: 30513
+          slave: 3
+          count: 4          
+          device_class: energy
+          unit_of_measurement: Wh          
+          data_type: int64
+          #scan_interval: 0  # dont keep scanning 
+
+        - name: SMA Daily yield
+          address: 30517
+          slave: 3
+          count: 4          
+          device_class: energy
+          unit_of_measurement: Wh          
+          data_type: int64
+          #scan_interval: 0  # dont keep scanning 
           
-          <<: *register
+        - name: SMA Operating time
+          address: 30521
+          slave: 3
+          count: 4          
+          device_class: duration
+          unit_of_measurement: s               
+          data_type: int64
+          #scan_interval: 0  # dont keep scanning 
+          
+        - name: SMA Feed in time
+          address: 30525
+          slave: 3
+          count: 4          
+          device_class: duration
+          unit_of_measurement: s               
+          data_type: int64
+          #scan_interval: 0  # dont keep scanning 
+          
+        - name: SMA Software package
+          address: 30059
+          slave: 3
+          count: 2          
+          #device_class: none
+          #unit_of_measurement: w          
+          data_type: int32
+          scan_interval: 0  # dont keep scanning 
+
+        - name: SMA System time #in epoch time
+          address: 30193
+          slave: 3
+          count: 2          
+          #device_class: timestamp
+          #unit_of_measurement: w          
+          data_type: int32
+          #scan_interval: 0  # dont keep scanning 
+
+        - name: SMA Waiting time until feed in
+          address: 30199
+          slave: 3
+          count: 2          
+          device_class: duration
+          unit_of_measurement: s
+          data_type: int32
+          #scan_interval: 0  # dont keep scanning 
+          
+        - name: SMA Grid feed in counter reading
+          address: 30583
+          slave: 3
+          count: 2          
+          device_class: energy
+          unit_of_measurement: Wh          
+          data_type: int32
+          #scan_interval: 0  # dont keep scanning 
+          
+        - name: SMA Number of grid connections
+          address: 30599
+          slave: 3
+          count: 2          
+          #device_class: energy
+          #unit_of_measurement: Wh          
+          data_type: int32
+          #scan_interval: 0  # dont keep scanning 
+          
+        - name: SMA DC current input
+          address: 30769
+          slave: 3
+          count: 2          
+          device_class: current
+          unit_of_measurement: A          
+          data_type: int32
+          #scan_interval: 0  # dont keep scanning 
+          
+        - name: SMA DC voltage input
+          address: 30771
+          slave: 3
+          count: 2          
+          device_class: voltage
+          unit_of_measurement: V          
+          data_type: int32
+          #scan_interval: 0  # dont keep scanning    
+          
+        - name: SMA DC power input
+          address: 30773
+          slave: 3
+          count: 2          
+          device_class: energy
+          unit_of_measurement: W          
+          data_type: int32
+          #scan_interval: 0  # dont keep scanning 
+          
+
+
+
+          
         - name: SMA_Nameplate_Model
           address: 30053
+          slave: 3
+          count: 2          
+          #device_class: none
+          data_type: int32
+          scan_interval: 0  # dont keep scanning           
 
         - name: sma_status
           data_type: int32
@@ -20,14 +138,7 @@
           slave: 3
           address: 30201
           count: 2
-#          value_template: >
-#            {% set mapper = {
-#              303: 'Off',
-#              307: 'Ok',
-#              308: 'On',
-#              311: 'Open'
-#            } %}
-#            "{{ mapper[value] if value in mapper else value }}"
+          #scan_interval: 0  # dont keep scanning 
 
         - name: sma_Inverter_WMax
           data_type: int32
@@ -100,3 +211,4 @@
           address: 30953
           count: 2
           scale: 0.1
+          
