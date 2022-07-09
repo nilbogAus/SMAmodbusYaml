@@ -1,0 +1,8 @@
+    template:
+      sensor:
+        name: sma_dc_current_input_template
+        icon: mdi:transmission-tower
+        state: > 
+          {% if states('sensor.sensor.sma_dc_current_input')  < -1000000 %} unavailable
+          {% else %} states('sensor.sensor.sma_dc_current_input')
+          {% endif %}
