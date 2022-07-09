@@ -1,8 +1,39 @@
     template:
       sensor:
-        name: sma_dc_current_input_template
-        icon: mdi:transmission-tower
-        state: > 
-          {% if states('sensor.sensor.sma_dc_current_input')  < -1000000 %} unavailable
-          {% else %} states('sensor.sensor.sma_dc_current_input')
-          {% endif %}
+        - name: SMA DC current input template
+          icon: mdi:transmission-tower
+          state: > 
+            {% if states('sensor.sma_dc_current_input')  < -1000000 %} unavailable
+            {% else %} states('sensor.sma_dc_current_input')
+            {% endif %}
+
+        - name: SMA DC power input template
+          icon: mdi:transmission-tower
+          state: > 
+            {% if states('sensor.sma_dc_power_input')  < -1000000 %} unavailable
+            {% else %} states('sensor.sma_dc_power_input')
+            {% endif %}
+            
+        - name: sma_status template
+          icon: mdi:transmission-tower
+          state: > 
+            {% set mapper =  {
+              '1' : 'Good',
+              '2' : 'Fair',
+              '9075' : 'Mdl',
+              '307' : 'Very Poor' } %}            
+            {% set state = states('sensor.sma_status') %}
+            {{ mapper[state] if state in mapper else 'Unknown' }}        
+            
+        - name: sma_nameplate_model template
+          icon: mdi:transmission-tower
+          value: states('sensor.sma_nameplate_model')
+          state: >
+            {% set mapper =  {
+              '1' : 'Good',
+              '2' : 'Fair',
+              '9075' : 'Mdl',
+              '307' : 'Very Poor' } %}   
+            {% set state = ('sensor.sma_nameplate_model') %}
+            {{ mapper[state] if state in mapper else 'Unknown' }}    
+            
