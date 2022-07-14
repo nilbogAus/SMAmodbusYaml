@@ -5,155 +5,189 @@
     sensors:
         - name: SMA Serial number
           address: 30005
-          slave: 3
-          count: 2          
-          #device_class: none
-          #unit_of_measurement: w          
-          data_type: int32
-          scan_interval: 0  # dont keep scanning 
+          <<: &readonce
+            scan_interval: 0  # dont keep scanning 
+          <<: &uint32
+            data_type: uint32
+            count: 2
+            slave: 3
+              
+        - name: SMA Device class
+          address: 30051
+          <<: *readonce
+          <<: *uint32
 
-        - name: SMA Total yield
-          address: 30513
-          slave: 3
-          count: 4          
-          device_class: energy
-          unit_of_measurement: Wh          
-          data_type: int64
-          #scan_interval: 0  # dont keep scanning 
-
-        - name: SMA Daily yield
-          address: 30517
-          slave: 3
-          count: 4          
-          device_class: energy
-          unit_of_measurement: Wh          
-          data_type: int64
-          #scan_interval: 0  # dont keep scanning 
-          
-        - name: SMA Operating time
-          address: 30521
-          slave: 3
-          count: 4          
-          device_class: duration
-          unit_of_measurement: s               
-          data_type: int64
-          #scan_interval: 0  # dont keep scanning 
-          
-        - name: SMA Feed in time
-          address: 30525
-          slave: 3
-          count: 4          
-          device_class: duration
-          unit_of_measurement: s               
-          data_type: int64
-          #scan_interval: 0  # dont keep scanning 
+        - name: SMA Model
+          address: 30053
+          <<: *readonce
+          <<: *uint32
           
         - name: SMA Software package
           address: 30059
-          slave: 3
-          count: 2          
-          #device_class: none
-          #unit_of_measurement: w          
-          data_type: int32
-          scan_interval: 0  # dont keep scanning 
+          <<: *readonce
+          <<: *uint32
 
-        - name: SMA System time #in epoch time
+        - name: SMA System time
           address: 30193
-          slave: 3
-          count: 2          
-          #device_class: timestamp
-          #unit_of_measurement: w          
-          data_type: int32
-          #scan_interval: 0  # dont keep scanning 
-
-        - name: SMA Waiting time until feed in
-          address: 30199
-          slave: 3
-          count: 2          
-          device_class: duration
-          unit_of_measurement: s
-          data_type: int32
-          #scan_interval: 0  # dont keep scanning 
+          <<: &time
+            device_class: duration
+            unit_of_measurement: s
+          <<: *uint32
           
+        - name: SMA Current event number
+          address: 30197
+          <<: *uint32
+          
+        - name: SMA Waiting time until feed-in
+          address: 30199
+          <<: *time
+          <<: *uint32
+
+        - name: SMA Condition
+          address: 30051
+          <<: *uint32
+
+        - name: SMA Nominal power in Ok Mode
+          address: 30203
+          <<: *uint32
+        - name: SMA Nominal power in Warning Mode
+          address: 30205
+          <<: *uint32
+        - name: SMA Nominal power in Fault Mode
+          address: 30207
+          <<: *uint32
+
+        - name: SMA Grid relay contactor
+          address: 30211
+          <<: *uint32
+
+        - name: SMA Reason for derating
+          address: 30217
+          <<: *uint32
+          
+        - name: SMA Insulation resistance
+          address: 30225
+          <<: *uint32
+          <<: &resistance
+            unit_of_measurement: Ohm
+          
+        - name: SMA Rated active power WMaxOutRtg
+          address: 30231
+          <<: *uint32
+          <<: &power
+            device_class: power
+            unit_of_measurement: W
+          
+        - name: SMA Set active power limit
+          address: 30233
+          <<: *uint32          
+          <<: *power
+
+        - name: SMA Block status
+          address: 30251
+          <<: *uint32
+
+        - name: SMA Total yield
+          address: 30513
+          <<: &uint64          
+            slave: 3
+            count: 4          
+            data_type: uint64
+          <<: &energy
+            device_class: energy
+            unit_of_measurement: Wh          
+
+        - name: SMA Daily yield
+          address: 30517
+          <<: *uint64
+          <<: *energy
+          
+        - name: SMA Operating time
+          address: 30521
+          <<: *uint64
+          <<: *time
+
+        - name: SMA Feed in time
+          address: 30525
+          <<: *uint64
+          <<: *time
+
+        - name: SMA Total yield kWh
+          address: 30531
+          <<: *uint32
+          <<: &energyk
+            device_class: energy
+            unit_of_measurement: kWh
+            
+        - name: SMA Total yield MWh
+          address: 30533
+          <<: *uint32
+          <<: &energyM
+            device_class: energy
+            unit_of_measurement: MWh
+
+        - name: SMA Daily yield kWh
+          address: 30537
+          <<: *uint32
+          <<: *energyk
+          
+        - name: SMA Daily yield MWh
+          address: 30539
+          <<: *uint32
+          <<: *energyM
+            
+        - name: SMA Number of events for user
+          address: 30559
+          <<: *uint32
+          
+        - name: SMA Number of events for installer
+          address: 30561
+          <<: *uint32
+          
+        - name: SMA Number of events for service
+          address: 30563
+          <<: *uint32
+
         - name: SMA Grid feed in counter reading
           address: 30583
-          slave: 3
-          count: 2          
-          device_class: energy
-          unit_of_measurement: Wh          
-          data_type: int32
-          #scan_interval: 0  # dont keep scanning 
-          
+          <<: *uint32
+          <<: *energy
+
         - name: SMA Number of grid connections
           address: 30599
-          slave: 3
-          count: 2          
-          #device_class: energy
-          #unit_of_measurement: Wh          
-          data_type: int32
-          #scan_interval: 0  # dont keep scanning 
-          
-        - name: SMA DC current input
+          <<: *uint32
+
+        - name: SMA DC current input A
           address: 30769
-          slave: 3
-          count: 2          
-          device_class: current
-          unit_of_measurement: A          
-          data_type: int32
-          #scan_interval: 0  # dont keep scanning 
-          
+          <<: &int32
+            slave: 3
+            count: 2
+            data_type: int32
+          <<: &current
+            device_class: current
+            unit_of_measurement: A
+          <<: &decimals3
+            scale: 0.001
+            precision: 3
+
         - name: SMA DC voltage input
           address: 30771
-          slave: 3
-          count: 2          
-          device_class: voltage
-          unit_of_measurement: V          
-          data_type: int32
-          #scan_interval: 0  # dont keep scanning    
-          
+          <<: *int32
+          <<: &voltage          
+            device_class: voltage
+            unit_of_measurement: V
+          <<: &decimals2
+            scale: 0.01
+            precision: 2
+ 
         - name: SMA DC power input
           address: 30773
-          slave: 3
-          count: 2          
-          device_class: energy
-          unit_of_measurement: W          
-          data_type: int32
-          #scan_interval: 0  # dont keep scanning 
-          
+          <<: *int32
+          <<: *energy
 
 
 
-          
-        - name: SMA_Nameplate_Model
-          address: 30053
-          slave: 3
-          count: 2          
-          #device_class: none
-          data_type: int32
-          scan_interval: 0  # dont keep scanning           
 
-        - name: sma_status
-          data_type: int32
-          unit_of_measurement: status
-          slave: 3
-          address: 30201
-          count: 2
-          #scan_interval: 0  # dont keep scanning 
-
-        - name: sma_Inverter_WMax
-          data_type: int32
-          unit_of_measurement: w
-          slave: 3
-          address: 30233
-          count: 2
-          scan_interval: 0  # dont keep scanning 
-
-        - name: SMA_Total
-          data_type: int64
-          unit_of_measurement: Wh
-          slave: 3
-          address: 30513
-          count: 4
 
         - name: sma_power
           data_type: int32
@@ -194,6 +228,8 @@
           scale: 0.01
           precision: 2
           
+
+
         - name: grid_frequency
           data_type: int32
           unit_of_measurement: Hz
@@ -211,4 +247,53 @@
           address: 30953
           count: 2
           scale: 0.1
+
+        - name: SMA DC current input Phase 1
+          address: 30977
+          slave: 3
+          count: 2          
+          device_class: power
+          unit_of_measurement: A          
+          data_type: int32
+          #scan_interval: 0  # dont keep scanning 
+
+        - name: SMA DC current input 2
+          address: 30979
+          slave: 3
+          count: 2          
+          device_class: power
+          unit_of_measurement: A          
+          data_type: int32
+          #scan_interval: 0  # dont keep scanning 
+
+
+
+        - name: SMA DC current input B
+          address: 30957
+          slave: 3
+          count: 2          
+          device_class: power
+          unit_of_measurement: mA          
+          data_type: int32
+          #scan_interval: 0  # dont keep scanning
+          
+        - name: SMA DC current input 5
+          address: 31793
+          slave: 3
+          count: 2          
+          device_class: power
+          unit_of_measurement: A          
+          data_type: int32
+          #scan_interval: 0  # dont keep scanning 
+               
+        - name: SMA DC current input 6
+          address: 31795
+          slave: 3
+          count: 2          
+          device_class: power
+          unit_of_measurement: A          
+          data_type: int32
+          #scan_interval: 0  # dont keep scanning 
+
+
           
