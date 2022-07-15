@@ -170,7 +170,7 @@
             scale: 0.001
             precision: 3
 
-        - name: SMA DC voltage input
+        - name: SMA DC voltage input A
           address: 30771
           <<: *int32
           <<: &voltage          
@@ -180,120 +180,365 @@
             scale: 0.01
             precision: 2
  
-        - name: SMA DC power input
+        - name: SMA DC power input A
           address: 30773
           <<: *int32
           <<: *energy
 
-
-
-
-
         - name: sma_power
-          data_type: int32
-          device_class: 'power'
-          unit_of_measurement: W
-          slave: 3
           address: 30775
-          count: 2
-
+          <<: *int32
+          <<: *power
+          
         - name: SMA Power L1
-          data_type: int32
-          unit_of_measurement: W
-          slave: 3
-          address: 30779
-          count: 2
+          address: 30777
+          <<: *int32
+          <<: *power
       
         - name: SMA Power L2
-          data_type: int32
-          unit_of_measurement: W
-          slave: 3
-          address: 30781
-          count: 2
+          address: 30779
+          <<: *int32
+          <<: *power
           
         - name: SMA Power L3
-          data_type: int32
-          unit_of_measurement: W
-          slave: 3
-          address: 30777
-          count: 2
-          
-        - name: grid_voltage
-          data_type: int32
-          device_class: 'voltage'
-          unit_of_measurement: V
-          slave: 3 
-          address: 30783
-          count: 2
-          scale: 0.01
-          precision: 2
-          
+          address: 30781        
+          <<: *int32
+          <<: *power
 
+        - name: Grid voltage phase L1
+          address: 30783        
+          <<: *uint32
+          <<: *voltage
+          <<: *decimals2
+          
+        - name: Grid voltage phase L2
+          address: 30785        
+          <<: *uint32
+          <<: *voltage
+          <<: *decimals2
 
-        - name: grid_frequency
-          data_type: int32
-          unit_of_measurement: Hz
-          slave: 3 
+        - name: Grid voltage phase L3
+          address: 30787        
+          <<: *uint32
+          <<: *voltage
+          <<: *decimals2          
+
+        - name: SMA Grid current
+          address: 30795        
+          <<: *uint32          
+          <<: *current
+          <<: *decimals3
+          
+        - name: SMA Grid frequency
           address: 30803
-          count: 2
-          scale: 0.01
-          precision: 2          
-          
-        - name: sma_tempurature
-          data_type: int32
-          device_class: 'temperature'
-          unit_of_measurement: °C
-          slave: 3
+          <<: *uint32          
+          <<: *decimals2          
+          <<: &frequency
+            unit_of_measurement: Hz
+
+        - name: SMA Reactive power L1
+          address: 30807
+          <<: *int32
+          <<: &reactivepower
+            device_class: reactive_power
+            unit_of_measurement: VAr
+            
+        - name: SMA Reactive power L2
+          address: 30809
+          <<: *int32
+          <<: *reactivepower
+
+        - name: SMA Reactive power L3
+          address: 30811
+          <<: *int32
+          <<: *reactivepower
+
+        - name: SMA Apparent power
+          address: 30813
+          <<: *int32
+          <<: &apparentpower
+            device_class: apparent_power
+            unit_of_measurement: VA
+
+        - name: SMA Apparent power L1
+          address: 30815
+          <<: *int32
+          <<: *apparentpower
+
+        - name: SMA Apparent power L2
+          address: 30817
+          <<: *int32
+          <<: *apparentpower
+
+        - name: SMA Apparent power L3
+          address: 30819
+          <<: *int32
+          <<: *apparentpower
+
+        - name: SMA Manual reactive power setting for active power output
+          address: 30827
+          <<: *int32
+          <<: *reactivepower
+
+        - name: SMA Manual reactive power setting for active power output percentage
+          address: 30829
+          <<: *int32
+          <<: &reactivepercentage
+            device_class: power_factor
+            unit_of_measurement: '%'
+          <<: &decimals1
+            scale: 0.1
+            precision: 1
+
+        - name: SMA Operating mode active power setting
+          address: 30835
+          <<: *uint32
+
+        - name: SMA Active power limitation P, active power configuration
+          address: 30837
+          <<: *uint32
+          <<: *power
+
+        - name: SMA Active power limitation P, active power configuration percentage
+          address: 30839
+          <<: *uint32
+          <<: &percentage
+            unit_of_measurement: '%'
+
+        - name: SMA Plant mains connection
+          address: 30881
+          <<: *uint32
+
+        - name: SMA Manual reactive power setpoint for zero power output
+          address: 30837
+          <<: *int32
+          <<: *power
+
+        - name: SMA Manual reactive power setpoint for zero power output percentage
+          address: 30839
+          <<: *int32
+          <<: *percentage
+          <<: *decimals1
+
+        - name: SMA Connection speed of SMACOM A
+          address: 30925
+          <<: *uint32
+
+        - name: SMA Duplex mode of SMACOM A
+          address: 30927
+          <<: *uint32
+
+        - name: SMA Speedwire connection status of SMACOM A
+          address: 30929
+          <<: *uint32
+
+        - name: SMA Connection speed of SMACOM B
+          address: 30931
+          <<: *uint32
+
+        - name: SMA Duplex mode of SMACOM B
+          address: 30933
+          <<: *uint32
+
+        - name: SMA Speedwire connection status of SMACOM B
+          address: 30935
+          <<: *uint32
+
+        - name: SMA Displacement power factor
+          address: 30949
+          <<: *uint32
+          <<: *decimals3
+
+        - name: SMA Internal temperature
           address: 30953
-          count: 2
-          scale: 0.1
-
-        - name: SMA DC current input Phase 1
-          address: 30977
-          slave: 3
-          count: 2          
-          device_class: power
-          unit_of_measurement: A          
-          data_type: int32
-          #scan_interval: 0  # dont keep scanning 
-
-        - name: SMA DC current input 2
-          address: 30979
-          slave: 3
-          count: 2          
-          device_class: power
-          unit_of_measurement: A          
-          data_type: int32
-          #scan_interval: 0  # dont keep scanning 
-
-
-
+          <<: *int32
+          <<: &temperature
+            device_class: temperature
+            unit_of_measurement: °C
+          <<: *decimals1
+          
         - name: SMA DC current input B
           address: 30957
-          slave: 3
-          count: 2          
-          device_class: power
-          unit_of_measurement: mA          
-          data_type: int32
-          #scan_interval: 0  # dont keep scanning
+          <<: *int32
+          <<: *current
+          <<: *decimals3
+
+        - name: SMA DC voltage input B
+          address: 30959
+          <<: *int32
+          <<: *voltage
+          <<: *decimals2
+
+        - name: SMA DC power input B
+          address: 30961
+          <<: *int32
+          <<: *energy
+
+        - name: SMA Intermediate circuit voltage
+          address: 30975
+          <<: *int32
+          <<: *voltage
+          <<: *decimals2
+
+        - name: SMA Grid current phase L1
+          address: 30977
+          <<: *int32
+          <<: *current
+          <<: *decimals3
           
-        - name: SMA DC current input 5
+        - name: SMA Grid current phase L2
+          address: 30979
+          <<: *int32
+          <<: *current
+          <<: *decimals3
+          
+        - name: SMA Grid current phase L3
+          address: 30981
+          <<: *int32
+          <<: *current
+          <<: *decimals3
+          
+        - name: SMA Nominal power in Ok Mode
+          address: 31085
+          <<: *uint32
+          <<: *current
+          <<: *decimals3
+
+        - name: SMA Residual current
+          address: 31247
+          <<: *int32
+          <<: *current
+          <<: *decimals3
+
+        - name: SMA Reactive power
+          address: 31497
+          <<: *int32
+          <<: *reactivepower
+          
+        - name: DC current input C
           address: 31793
-          slave: 3
-          count: 2          
-          device_class: power
-          unit_of_measurement: A          
-          data_type: int32
-          #scan_interval: 0  # dont keep scanning 
-               
-        - name: SMA DC current input 6
-          address: 31795
-          slave: 3
-          count: 2          
-          device_class: power
-          unit_of_measurement: A          
-          data_type: int32
-          #scan_interval: 0  # dont keep scanning 
-
-
+          <<: *int32
+          <<: *current
+          <<: *decimals3
           
+        - name: DC current input D
+          address: 31795
+          <<: *int32
+          <<: *current
+          <<: *decimals3
+          
+        - name: SMA Standby status
+          address: 33001
+          <<: *uint32
+
+        - name: SMA Operating status
+          address: 33003
+          <<: *uint32
+          
+        - name: SMA Active reactive power range
+          address: 33007
+          <<: *uint32
+          
+        - name: 'SMA cos φ(U), max. number of support points'
+          address: 33011
+          <<: *uint32    
+          
+        - name: 'SMA Q(P), max. number of support points'
+          address: 33013
+          <<: *uint32          
+          
+        - name: 'SMA cos φ(P), max. number of support points'
+          address: 33015
+          <<: *uint32
+
+        - name: SMA Rated active power WMaxInRtg
+          address: 33019
+          <<: *int32          
+          <<: *power
+
+        - name: SMA Rated apparent power VAMaxOutRtg
+          address: 33025
+          <<: *uint32
+          <<: *apparentpower
+
+        - name: SMA Rated apparent power VAMaxInRtg
+          address: 33027
+          <<: *uint32
+          <<: *apparentpower
+          
+        - name: SMA Rated reactive power VArMaxQ1Rtg
+          address: 33029
+          <<: *int32
+          <<: *reactivepower
+
+        - name: SMA Rated reactive power VArMaxQ2Rtg
+          address: 33031
+          <<: *int32
+          <<: *reactivepower
+
+        - name: SMA Rated reactive power VArMaxQ3Rtg
+          address: 33033
+          <<: *int32
+          <<: *reactivepower
+
+        - name: SMA Rated reactive power VArMaxQ4Rtg
+          address: 33035
+          <<: *int32
+          <<: *reactivepower
+
+        - name: 'SMA Rated cos φ PFMinQ1Rtg'
+          address: 33037
+          <<: *uint32
+          <<: &decimals4
+            scale: 0.0001
+            precision: 4
+
+        - name: 'SMA Rated cos φ PFMinQ2Rtg'
+          address: 33039
+          <<: *uint32
+          <<: *decimals4
+
+        - name: 'SMA Rated cos φ PFMinQ3Rtg'
+          address: 33041
+          <<: *uint32
+          <<: *decimals4
+
+        - name: 'SMA Rated cos φ PFMinQ4Rtg'
+          address: 33043
+          <<: *uint32
+          <<: *decimals4
+
+        - name: 'SMA Q(V), max. number of support points'
+          address: 33045
+          <<: *uint32
+
+        - name: 'SMA P(U), max. number of support points'
+          address: 33047
+          <<: *uint32
+
+        - name: Internal temperature B
+          address: 34113
+          <<: *int32
+          <<: *temperature
+          <<: *decimals1
+
+        - name: SMA Number of events for user B
+          address: 35377
+          data_type: uint64
+          count: 4
+          slave: 3
+
+        - name: SMA Number of events for installer B
+          address: 35381
+          data_type: uint64
+          count: 4
+          slave: 3
+          
+        - name: SMA Number of events for service B
+          address: 35385
+          data_type: uint64
+          count: 4
+          slave: 3
+ 
+
+
