@@ -44,7 +44,7 @@
           <<: *uint32
 
         - name: SMA Condition
-          address: 30051
+          address: 30201
           <<: *uint32
 
         - name: SMA Nominal power in Ok Mode
@@ -524,21 +524,80 @@
 
         - name: SMA Number of events for user B
           address: 35377
-          data_type: uint64
-          count: 4
-          slave: 3
+          <<: *uint64  
 
         - name: SMA Number of events for installer B
           address: 35381
-          data_type: uint64
-          count: 4
-          slave: 3
+          <<: *uint64  
           
         - name: SMA Number of events for service B
           address: 35385
-          data_type: uint64
-          count: 4
-          slave: 3
+          <<: *uint64  
+
+        - name: 'SMA DC voltage control type'
+          address: 40007
+          <<: *uint32
+          
+        - name: 'General operating mode'
+          address: 40009
+          <<: *uint32
+          
+        - name: 'SMA Language of the user interface'
+          address: 40013
+          <<: *uint32
  
+        - name: 'SMA General operating status'
+          address: 40029
+          <<: *uint32
+ 
+        - name: 'SMA Firmware version of the main processor'
+          address: 40063
+          <<: *uint32
+           
+        - name: 'SMA Firmware version of the logic component'
+          address: 40065
+          <<: *uint32
+           
+        - name: 'SMA Frequency monitoring, lower minimum threshold'
+          address: 40101
+          <<: *uint32
+          <<: *frequency
+          <<: *decimals2
+          
+        - name: 'SMA Frequency monitoring upper maximum threshold'
+          address: 40103
+          <<: *uint32
+          <<: *frequency
+          <<: *decimals2
+          
+        - name: 'SMA Country standard set'
+          address: 40109
+          <<: *uint32
+
+        - name: 'SMA Nominal frequency'
+          address: 40135
+          <<: *uint32
+          <<: *frequency
+          <<: *decimals2
+
+        - name: 'SMA Automatic speedwire configureation switched on'
+          address: 40157
+          <<: *uint32
+
+        - name: 'SMA Spdwr.Ip'
+          address: 40159
+          <<: &string8
+            data_type: string
+            count: 8
+            slave: 3
+
+        - name: 'SMA Spdwr.SnetMsk'
+          address: 40167
+          <<: *string8
+
+        - name: 'SMA Spdwr.GwIp'
+          address: 40175        
+          <<: *string8
+
 
 
