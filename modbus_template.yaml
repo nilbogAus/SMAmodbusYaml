@@ -1,39 +1,473 @@
-    template:
-      sensor:
-        - name: SMA DC current input template
-          icon: mdi:transmission-tower
+      template:
+
+####### Lookup lists ####### 
+
+      - sensor:
+        - name: SMA Automatic speedwire configureation switched on template
           state: > 
-            {% if states('sensor.sma_dc_current_input')  < -1000000 %} unavailable
-            {% else %} states('sensor.sma_dc_current_input')
+            {% set mapper =  {
+              '1129' : 'Yes',
+              '1130' : 'No',
+            } %}
+            {% set state = states('sensor.sma_automatic_speedwire_configureation_switched_on') %}
+            {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
+
+        - name: SMA Block status template
+          state: > 
+            {% set mapper =  {
+              '257' : 'Frequency not permitted',
+              '1655' : 'Electric arc detected',
+              '1690' : 'Fast shut-down',
+              '2386' : 'Overvoltage',
+              '2387' : 'Undervoltage',
+              '2388' : 'Overfrequency',
+              '2389' : 'Underfrequency',
+              '2390' : 'Passive islanding detection',
+              '2490' : 'Phase loss',
+              '3165' : 'PLL error',
+              '3166' : 'Phase loss on low voltage side',
+              '3167' : 'Active islanding detection',
+              '4553' : 'After fault current',
+              '4570' : 'Wait for enable operation',
+              '16777213' : 'Information not available'
+            } %}
+            {% set state = states('sensor.sma_block_status') %}
+            {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
+
+        - name: SMA Condition template
+          state: > 
+            {% set mapper =  {
+                '35': 'Fault',
+                '303': 'Off',
+                '307': 'Ok',
+                '455': 'Warning'
+            } %}
+            {% set state = states('sensor.sma_condition') %}
+            {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
+
+        - name: SMA Connection speed of SMACOM A template
+          state: > 
+            {% set mapper =  {
+                '302': 'None',
+                '1720': '10 Mbit/s',
+                '1721': '100 Mbit/s' 
+            } %}
+            {% set state = states('sensor.sma_connection_speed_of_smacom_a') %}
+            {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
+
+        - name: SMA Connection speed of SMACOM B template
+          state: > 
+            {% set mapper =  {
+                '302': 'None',
+                '1720': '10 Mbit/s',
+                '1721': '100 Mbit/s' 
+            } %}
+            {% set state = states('sensor.sma_connection_speed_of_smacom_b') %}
+            {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
+
+
+        - name: SMA Country standard set template
+          state: > 
+            {% set mapper =  {
+                '27': 'Special setting',
+                '1013': 'SMA other standard',
+                '7584': '[DE] VDE-AR-N4105:2018 Generators > 4.6 kVA',
+                '7588': '[DE] VDE-AR-N4110:2018 generator int. Decoup. Protection Device',
+                '7589': '[DE] VDE-AR-N4110:2018 generator ext. Decoup. Protection Device',
+                '7590': '[EU] EN50549-1:2018 LV',
+                '7591': '[EU] EN50549-2:2018 MV',
+                '7595': '[UK] ENA-EREC-G99/1:2018',
+                '7599': '[DK] Dansk Energi West 2019',
+                '7600': '[DK] Dansk Energi East 2019',
+                '7602': '[BE] Synergrid C10/11:2019 LV Erzeuger int. EKS',
+                '7603': '[BE] Synergrid C10/11:2019 LV Erzeuger ext. EKS',
+                '7604': '[BE] Synergrid C10/11:2019 MV Erzeuger int. EKS',
+                '7605': '[BE] Synergrid C10/11:2019 MV Erzeuger ext. EKS',
+                '7612': '[IT] CEI0-21:2019 Anlage>11,08 kW ext. EKS',
+                '7613': '[IT] CEI0-16:2019 Anlage ≤6 MW',
+                '7615': '[AT] TOR Erzeuger Typ A V1.0:2019 Anlage >3,68 kVA',
+                '7616': '[AT] TOR Erzeuger Typ B V1.0:2019 Anlage >250 kW',
+                '16777213': 'Information not available'
+            } %}
+            {% set state = states('sensor.sma_country_standard_set') %}
+            {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
+
+
+
+        - name: SMA Device class template
+          state: > 
+            {% set mapper =  {
+              '8001' : 'Solar Inverters'
+            } %}
+            {% set state = states('sensor.sma_device_class') %}
+            {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
+
+        - name: SMA Model template
+          state: > 
+            {% set mapper =  {
+              '9067' : 'STP 10000TL-10',
+              '9068' : 'STP 12000TL-10',
+              '9069' : 'STP 15000TL-10',
+              '9070' : 'STP 17000TL-10',
+              '9074' : 'SB 3000TL-21',
+              '9075' : 'SB 4000TL-21',
+              '9076' : 'SB 5000TL-21',
+              '9101' : 'STP 8000TL-10',
+              '9139' : 'STP 20000TLHE-10',
+              '9140' : 'STP 15000TLHE-10',
+              '9165' : 'SB 3600TL-21',
+              '9181' : 'STP 20000TLEE-10',
+              '9182' : 'STP 15000TLEE-10',
+              '9184' : 'SB 2500TLST-21',
+              '9185' : 'SB 3000TLST-21',
+              '9184' : 'SB 2500TLST-21',
+              '9185' : 'SB 3000TLST-21',
+              '9284' : 'STP 20000TL-30',
+              '9285' : 'STP 25000TL-30',
+              '9336' : 'STP 15000TL-30',
+              '9337' : 'STP 17000TL-30'
+            } %}
+            {% set state = states('sensor.sma_model') %}
+            {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
+
+        - name: SMA Duplex mode of SMACOM A template
+          state: > 
+            {% set mapper =  {
+                '302': 'None',
+                '1726': 'Half duplex',
+                '1727': 'Full duplex'
+            } %}
+            {% set state = states('sensor.sma_duplex_mode_of_smacom_a') %}
+            {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
+
+        - name: SMA Duplex mode of SMACOM B template
+          state: > 
+            {% set mapper =  {
+                '302': 'None',
+                '1726': 'Half duplex',
+                '1727': 'Full duplex'
+            } %}
+            {% set state = states('sensor.sma_duplex_mode_of_smacom_b') %}
+            {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
+            
+        - name: SMA General operating status template
+          state: > 
+            {% set mapper =  {
+                '295': 'MPP',
+                '303': 'Off',
+                '443': 'Constant voltage',
+                '569': 'Activated',
+                '1295': 'Standby',
+                '1393': 'Waiting for PV voltage',
+                '1394': 'Waiting for valid AC grid',
+                '1463': 'Backup',
+                '1469': 'Shut down',
+                '1795': 'Bolted',
+                '2119': 'Derating',
+                '2531': 'Energy saving mode',
+                '16777213': 'Information not available'
+            } %}
+            {% set state = states('sensor.sma_general_operating_status') %}
+            {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
+            
+        - name: SMA Language of the user interface template
+          state: > 
+            {% set mapper =  {
+                '777':	'Deutsch',
+                '778':	'English',
+                '779':	'Italiano',
+                '780':	'Español',
+                '781':	'Français',
+                '782':	'Ελληνικά',
+                '783':	'한국어',
+                '784':	'Česky',
+                '785':	'Português',
+                '786':	'Nederlands',
+                '796':	'Slovenski',
+                '797':	'Български',
+                '798':	'Polski',
+                '799':	'日本語'
+            } %}
+            {% set state = states('sensor.sma_language_of_the_user_interface') %}
+            {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
+
+        - name: SMA Operating mode active power setting template
+          state: > 
+            {% set mapper =  {
+                '303': 'Off',
+                '1077': 'Manual setting in W',
+                '1078': 'Manual setting in %',
+                '1079': 'External setting'
+            } %}
+            {% set state = states('sensor.sma_operating_mode_active_power_setting') %}
+            {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
+
+        - name: SMA Plant mains connection template
+          state: > 
+            {% set mapper =  {
+                '1779': 'Separated',
+                '1780': 'Public electricity mains',
+                '1781': 'Island mains'
+            } %}
+            {% set state = states('sensor.sma_plant_mains_connection') %}
+            {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
+
+        - name: SMA Reason for derating template
+          state: > 
+            {% set mapper =  {
+            '557': 'Overtemperature',
+            '884': 'not active',
+            '887': 'none',
+            '1705': 'Frequency',
+            '3520': 'Voltage deviation',
+            '3554': 'Reactive power priority',
+            '3556': 'High DC voltage',
+            '4560': 'External setting',
+            '4561': 'External setting 2',
+            '16777213': 'Information not available'
+            } %}
+            {% set state = states('sensor.sma_reason_for_derating') %}
+            {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
+
+
+####### not popultaed in low power ####### 
+
+
+        - name: SMA Apparent power template
+          unit_of_measurement: VA
+          device_class: apparent_power        
+          state: > 
+            {% if is_state('sensor.sma_apparent_power','-2147483648') %} {{ 0 }}
+            {% else %} {{ states('sensor.sma_apparent_power') | int }} 
+            {% endif %}
+            
+        - name: SMA DC current input A template
+          unit_of_measurement: A
+          device_class: current        
+          state: > 
+            {% if is_state('sensor.sma_dc_current_input_a','-2147483.648') %} {{ 0 | float }}
+            {% else %} {{ states('sensor.sma_dc_current_input_a') | float }} 
             {% endif %}
 
-        - name: SMA DC power input template
-          icon: mdi:transmission-tower
+        - name: SMA DC current input B template
+          unit_of_measurement: A
+          device_class: current    
           state: > 
-            {% if states('sensor.sma_dc_power_input')  < -1000000 %} unavailable
-            {% else %} states('sensor.sma_dc_power_input')
+            {% if is_state('sensor.sma_dc_current_input_b','-2147483.648') %} {{ 0 | float }}
+            {% else %} {{ states('sensor.sma_dc_current_input_b') | float }} 
+            {% endif %}
+
+        - name: SMA DC power input A template
+          unit_of_measurement: Wh
+          device_class: energy        
+          state: > 
+            {% if is_state('sensor.sma_dc_power_input_a','-2147483648') %} {{ 0 | int }} 
+            {% else %} {{ states('sensor.sma_dc_power_input_a') | int }}  
+            {% endif %}
+
+        - name: SMA DC power input B template
+          unit_of_measurement: Wh
+          device_class: energy        
+          state: > 
+            {% if is_state('sensor.sma_dc_power_input_b','-2147483648') %} {{ 0 | int }} 
+            {% else %} {{ states('sensor.sma_dc_power_input_b') | int }} 
+            {% endif %}            
+
+        - name: SMA DC voltage input A template
+          unit_of_measurement: V
+          device_class: voltage        
+          state: > 
+            {% if is_state('sensor.sma_dc_voltage_input_a','-21474836.48') %} {{ 0 | float }} 
+            {% else %} {{ states('sensor.sma_dc_voltage_input_a') | float }}  
+            {% endif %}
+
+        - name: SMA DC voltage input B template
+          unit_of_measurement: V
+          device_class: voltage        
+          state: > 
+            {% if is_state('sensor.sma_dc_voltage_input_b','-21474836.48') %} {{ 0 | float }} 
+            {% else %} {{ states('sensor.sma_dc_voltage_input_b') | float }}  
+            {% endif %}            
+
+        - name: SMA Grid current template
+          unit_of_measurement: A
+          device_class: current                
+          state: > 
+            {% if is_state('sensor.sma_grid_current','4294967.295') %} {{ 0 | float }} 
+            {% else %} {{ states('sensor.sma_grid_current') | float }}  
+            {% endif %}   
+
+        - name: SMA Displacement power factor template
+          state: > 
+            {% if is_state('sensor.sma_displacement_power_factor','4294967.295') %} {{ 0 | float }} 
+            {% else %} {{ states('sensor.sma_displacement_power_factor') | float }}  
+            {% endif %}   
+            
+        - name: SMA Power template
+          unit_of_measurement: W
+          device_class: power
+          state: > 
+            {% if is_state('sensor.sma_power','-2147483648') %} 0 
+            {% else %} {{ states('sensor.sma_power') }} 
+            {% endif %}
+
+        - name: SMA Grid current phase L1 template
+          unit_of_measurement: A
+          device_class: current
+          state: > 
+            {% if is_state('sensor.sma_grid_current_phase_l1','-2147483.648') %} {{ 0 | float }}  
+            {% else %} {{ states('sensor.sma_grid_current_phase_l1') }} 
+            {% endif %}
+
+        - name: SMA Grid frequency template
+          unit_of_measurement: Hz
+          state: > 
+            {% if is_state('sensor.sma_grid_frequency','42949672.95') %} 
+            {% else %} {{ states('sensor.sma_grid_frequency') }} 
             {% endif %}
             
-        - name: sma_status template
-          icon: mdi:transmission-tower
+        - name: SMA Insulation resistance template
+          unit_of_measurement: Ohm
           state: > 
-            {% set mapper =  {
-              '1' : 'Good',
-              '2' : 'Fair',
-              '9075' : 'Mdl',
-              '307' : 'Very Poor' } %}            
-            {% set state = states('sensor.sma_status') %}
-            {{ mapper[state] if state in mapper else 'Unknown' }}        
+            {% if is_state('sensor.sma_insulation_resistance','4294967295') %} 
+            {% else %} {{ states('sensor.sma_insulation_resistance') }} 
+            {% endif %}
+           
+        - name: SMA Internal temperature template
+          unit_of_measurement: °C
+          device_class: temperature
+          state: > 
+            {% if is_state('sensor.sma_internal_temperature','-214748364.8') %}  
+            {% else %} {{ states('sensor.sma_internal_temperature') }} 
+            {% endif %}
             
-        - name: sma_nameplate_model template
-          icon: mdi:transmission-tower
-          value: states('sensor.sma_nameplate_model')
+        - name: SMA Reactive power L1 template
+          unit_of_measurement: VAr
+          device_class: reactive_power
+          state: > 
+            {% if is_state('sensor.sma_reactive_power_l1','-2147483.648') %} 0
+            {% else %} {{ states('sensor.sma_reactive_power_l1') }} 
+            {% endif %}
+            
+            
+            
+            
+
+####### seconds to human readable ####### 
+
+        - name: SMA Feed in time template
           state: >
-            {% set mapper =  {
-              '1' : 'Good',
-              '2' : 'Fair',
-              '9075' : 'Mdl',
-              '307' : 'Very Poor' } %}   
-            {% set state = ('sensor.sma_nameplate_model') %}
-            {{ mapper[state] if state in mapper else 'Unknown' }}    
-            
+              {% set time = states('sensor.sma_feed_in_time') | int %}
+              {% set minutes = ((time % 3600) / 60) | int %}
+              {% set hours = ((time % 86400) / 3600) | int %}
+              {% set days = ((time % 31536000) / 86400) | int %}
+              {% set years = (time / 31536000) | int %}
+              {%- if time < 60 -%}
+                Less than a minute
+              {%- else -%}
+                {%- if years > 0 -%}
+                  {%- if years == 1 -%}
+                    1 year
+                  {%- else -%}
+                    {{ years }} years
+                  {%- endif -%}
+                {%- endif -%}
+                {%- if days > 0 -%}
+                  {%- if years > 0 -%}
+                    {{ ', ' }}
+                  {%- endif -%}
+                  {%- if days == 1 -%}
+                    1 day
+                  {%- else -%}
+                    {{ days }} days
+                  {%- endif -%}
+                {%- endif -%}
+                {%- if hours > 0 -%}
+                  {%- if days > 0 -%}
+                    {{ ', ' }}
+                  {%- endif -%}
+                  {%- if hours == 1 -%}
+                    1 hour
+                  {%- else -%}
+                    {{ hours }} hours
+                  {%- endif -%}
+                {%- endif -%}
+                {%- if minutes > 0 -%}
+                  {%- if days > 0 or hours > 0 -%}
+                    {{ ', ' }}
+                  {%- endif -%}
+                  {%- if minutes == 1 -%}
+                    1 minute
+                  {%- else -%}
+                    {{ minutes }} minutes
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endif -%}
+
+        - name: SMA Operating time template
+          state: >
+              {% set time = states('sensor.sma_operating_time') | int %}
+              {% set minutes = ((time % 3600) / 60) | int %}
+              {% set hours = ((time % 86400) / 3600) | int %}
+              {% set days = ((time % 31536000) / 86400) | int %}
+              {% set years = (time / 31536000) | int %}
+              {%- if time < 60 -%}
+                Less than a minute
+              {%- else -%}
+                {%- if years > 0 -%}
+                  {%- if years == 1 -%}
+                    1 year
+                  {%- else -%}
+                    {{ years }} years
+                  {%- endif -%}
+                {%- endif -%}
+                {%- if days > 0 -%}
+                  {%- if years > 0 -%}
+                    {{ ', ' }}
+                  {%- endif -%}
+                  {%- if days == 1 -%}
+                    1 day
+                  {%- else -%}
+                    {{ days }} days
+                  {%- endif -%}
+                {%- endif -%}
+                {%- if hours > 0 -%}
+                  {%- if days > 0 -%}
+                    {{ ', ' }}
+                  {%- endif -%}
+                  {%- if hours == 1 -%}
+                    1 hour
+                  {%- else -%}
+                    {{ hours }} hours
+                  {%- endif -%}
+                {%- endif -%}
+                {%- if minutes > 0 -%}
+                  {%- if days > 0 or hours > 0 -%}
+                    {{ ', ' }}
+                  {%- endif -%}
+                  {%- if minutes == 1 -%}
+                    1 minute
+                  {%- else -%}
+                    {{ minutes }} minutes
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endif -%}
+
+####### calculated values ####### 
+
+
+        - name: SMA String A AC power template
+          unit_of_measurement: W
+          device_class: power
+          state: > 
+            {% if is_state('sensor.sma_dc_current_input_a','-2147483.648') %} {{ 0 | float }}
+            {% else %} {{ states('sensor.sma_dc_current_input_a') | float * states('sensor.grid_voltage_phase_l1') | float }} 
+            {% endif %}
+
+        - name: SMA String B AC Power template
+          unit_of_measurement: W
+          device_class: power
+          state: > 
+            {% if is_state('sensor.sma_dc_current_input_b','-2147483.648') %} 0 
+            {% else %} {{ states('sensor.sma_dc_current_input_b') | float * states('sensor.grid_voltage_phase_l1') | float }} 
+            {% endif %}

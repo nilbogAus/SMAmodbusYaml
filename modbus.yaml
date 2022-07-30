@@ -26,44 +26,59 @@
           address: 30059
           <<: *readonce
           <<: *uint32
+          <<: &readweekly
+            scan_interval: 604800   
 
-        - name: SMA System time
-          address: 30193
-          <<: &time
-            device_class: duration
-            unit_of_measurement: s
-          <<: *uint32
+#no value
+#        - name: SMA System time
+#          address: 30193
+#          <<: &time
+#            device_class: duration
+#            unit_of_measurement: s
+#          <<: *uint32
+
+#no value
+#        - name: SMA Current event number
+#          address: 30197
+#          <<: *uint32
           
-        - name: SMA Current event number
-          address: 30197
-          <<: *uint32
-          
-        - name: SMA Waiting time until feed-in
-          address: 30199
-          <<: *time
-          <<: *uint32
+#no value
+#        - name: SMA Waiting time until feed-in
+#          address: 30199
+#          <<: &time
+#            device_class: duration
+#            unit_of_measurement: s
+#          <<: *uint32
 
         - name: SMA Condition
           address: 30201
           <<: *uint32
-
+          <<: &readeveryminute
+            scan_interval: 60
+            
         - name: SMA Nominal power in Ok Mode
           address: 30203
           <<: *uint32
+          <<: &readdaily
+            scan_interval: 86400          
         - name: SMA Nominal power in Warning Mode
           address: 30205
           <<: *uint32
+          <<: *readdaily          
         - name: SMA Nominal power in Fault Mode
           address: 30207
           <<: *uint32
-
-        - name: SMA Grid relay contactor
-          address: 30211
-          <<: *uint32
+          <<: *readdaily          
 
         - name: SMA Reason for derating
-          address: 30217
+          address: 30211
           <<: *uint32
+          <<: *readeveryminute
+          
+# not avaliable 
+#        - name: SMA Grid relay contactor
+#          address: 30217
+#          <<: *uint32
           
         - name: SMA Insulation resistance
           address: 30225
@@ -77,15 +92,18 @@
           <<: &power
             device_class: power
             unit_of_measurement: W
+          <<: *readonce
           
         - name: SMA Set active power limit
           address: 30233
           <<: *uint32          
           <<: *power
+          <<: *readdaily
 
         - name: SMA Block status
           address: 30251
           <<: *uint32
+          <<: *readeveryminute
 
         - name: SMA Total yield
           address: 30513
@@ -105,53 +123,63 @@
         - name: SMA Operating time
           address: 30521
           <<: *uint64
-          <<: *time
+          <<: &time
+            device_class: duration
+            unit_of_measurement: s
 
         - name: SMA Feed in time
           address: 30525
           <<: *uint64
           <<: *time
 
-        - name: SMA Total yield kWh
-          address: 30531
-          <<: *uint32
-          <<: &energyk
-            device_class: energy
-            unit_of_measurement: kWh
-            
-        - name: SMA Total yield MWh
-          address: 30533
-          <<: *uint32
-          <<: &energyM
-            device_class: energy
-            unit_of_measurement: MWh
+# Duplicate less precise value
+#        - name: SMA Total yield kWh
+#          address: 30531
+#          <<: *uint32
+#          <<: &energyk
+#            device_class: energy
+#            unit_of_measurement: kWh
 
-        - name: SMA Daily yield kWh
-          address: 30537
-          <<: *uint32
-          <<: *energyk
-          
-        - name: SMA Daily yield MWh
-          address: 30539
-          <<: *uint32
-          <<: *energyM
-            
-        - name: SMA Number of events for user
-          address: 30559
-          <<: *uint32
-          
-        - name: SMA Number of events for installer
-          address: 30561
-          <<: *uint32
-          
-        - name: SMA Number of events for service
-          address: 30563
-          <<: *uint32
+# Duplicate less precise value
+#        - name: SMA Total yield MWh
+#          address: 30533
+#          <<: *uint32
+#          <<: &energyM
+#            device_class: energy
+#            unit_of_measurement: MWh
 
-        - name: SMA Grid feed in counter reading
-          address: 30583
-          <<: *uint32
-          <<: *energy
+# Duplicate less precise value
+#        - name: SMA Daily yield kWh
+#          address: 30537
+#          <<: *uint32
+#          <<: *energyk
+
+# Duplicate less precise value
+#        - name: SMA Daily yield MWh
+#          address: 30539
+#          <<: *uint32
+#          <<: *energyM
+
+# Duplicate less precise value
+#        - name: SMA Number of events for user
+#          address: 30559
+#          <<: *uint32
+
+# Duplicate less precise value
+#        - name: SMA Number of events for installer
+#          address: 30561
+#          <<: *uint32
+
+# Duplicate less precise value
+#        - name: SMA Number of events for service
+#          address: 30563
+#          <<: *uint32
+
+# not supported
+#        - name: SMA Grid feed in counter reading
+#          address: 30583
+#          <<: *uint32
+#          <<: *energy
 
         - name: SMA Number of grid connections
           address: 30599
@@ -189,21 +217,24 @@
           address: 30775
           <<: *int32
           <<: *power
-          
-        - name: SMA Power L1
-          address: 30777
-          <<: *int32
-          <<: *power
-      
-        - name: SMA Power L2
-          address: 30779
-          <<: *int32
-          <<: *power
-          
-        - name: SMA Power L3
-          address: 30781        
-          <<: *int32
-          <<: *power
+
+# duplicate value
+#        - name: SMA Power L1
+#          address: 30777
+#          <<: *int32
+#          <<: *power
+
+#not supported single phase
+#        - name: SMA Power L2
+#          address: 30779
+#          <<: *int32
+#          <<: *power
+
+#not supported single phase
+#        - name: SMA Power L3
+#          address: 30781        
+#          <<: *int32
+#          <<: *power
 
         - name: Grid voltage phase L1
           address: 30783        
@@ -242,16 +273,18 @@
           <<: &reactivepower
             device_class: reactive_power
             unit_of_measurement: VAr
-            
-        - name: SMA Reactive power L2
-          address: 30809
-          <<: *int32
-          <<: *reactivepower
 
-        - name: SMA Reactive power L3
-          address: 30811
-          <<: *int32
-          <<: *reactivepower
+# no extra info for single phase
+#        - name: SMA Reactive power L2
+#          address: 30809
+#          <<: *int32
+#          <<: *reactivepower
+
+# no extra info for single phase
+#        - name: SMA Reactive power L3
+#          address: 30811
+#          <<: *int32
+#          <<: *reactivepower
 
         - name: SMA Apparent power
           address: 30813
@@ -260,25 +293,30 @@
             device_class: apparent_power
             unit_of_measurement: VA
 
-        - name: SMA Apparent power L1
-          address: 30815
-          <<: *int32
-          <<: *apparentpower
+# no extra info for single phase
+#        - name: SMA Apparent power L1
+#          address: 30815
+#          <<: *int32
+#          <<: *apparentpower
 
-        - name: SMA Apparent power L2
-          address: 30817
-          <<: *int32
-          <<: *apparentpower
+# no extra info for single phase
+#        - name: SMA Apparent power L2
+#          address: 30817
+#          <<: *int32
+#          <<: *apparentpower
 
-        - name: SMA Apparent power L3
-          address: 30819
-          <<: *int32
-          <<: *apparentpower
+# no extra info for single phase
+#        - name: SMA Apparent power L3
+#          address: 30819
+#          <<: *int32
+#          <<: *apparentpower
 
-        - name: SMA Manual reactive power setting for active power output
-          address: 30827
-          <<: *int32
-          <<: *reactivepower
+# no value
+#        - name: SMA Manual reactive power setting for active power output
+#          address: 30827
+#          <<: *int32
+#          <<: *reactivepower
+
 
         - name: SMA Manual reactive power setting for active power output percentage
           address: 30829
@@ -289,22 +327,26 @@
           <<: &decimals1
             scale: 0.1
             precision: 1
+          <<: *readdaily
 
         - name: SMA Operating mode active power setting
           address: 30835
           <<: *uint32
-
+          <<: *readdaily
+          
         - name: SMA Active power limitation P, active power configuration
           address: 30837
           <<: *uint32
           <<: *power
-
+          <<: *readonce
+          
         - name: SMA Active power limitation P, active power configuration percentage
           address: 30839
           <<: *uint32
           <<: &percentage
             unit_of_measurement: '%'
-
+          <<: *readonce
+          
         - name: SMA Plant mains connection
           address: 30881
           <<: *uint32
@@ -323,18 +365,23 @@
         - name: SMA Connection speed of SMACOM A
           address: 30925
           <<: *uint32
-
+          <<: &readeveryhour  
+            scan_interval: 3600
+            
         - name: SMA Duplex mode of SMACOM A
           address: 30927
           <<: *uint32
+          <<: *readeveryhour          
 
         - name: SMA Speedwire connection status of SMACOM A
           address: 30929
           <<: *uint32
+          <<: *readeveryhour            
 
         - name: SMA Connection speed of SMACOM B
           address: 30931
           <<: *uint32
+          <<: *readeveryhour            
 
         - name: SMA Duplex mode of SMACOM B
           address: 30933
@@ -373,12 +420,13 @@
           address: 30961
           <<: *int32
           <<: *energy
-
-        - name: SMA Intermediate circuit voltage
-          address: 30975
-          <<: *int32
-          <<: *voltage
-          <<: *decimals2
+          
+# Duplicate on single phase
+#        - name: SMA Intermediate circuit voltage
+#          address: 30975
+#          <<: *int32
+#          <<: *voltage
+#          <<: *decimals2
 
         - name: SMA Grid current phase L1
           address: 30977
@@ -386,17 +434,19 @@
           <<: *current
           <<: *decimals3
           
-        - name: SMA Grid current phase L2
-          address: 30979
-          <<: *int32
-          <<: *current
-          <<: *decimals3
-          
-        - name: SMA Grid current phase L3
-          address: 30981
-          <<: *int32
-          <<: *current
-          <<: *decimals3
+# unsupported on single phase
+#        - name: SMA Grid current phase L2
+#          address: 30979
+#          <<: *int32
+#          <<: *current
+#          <<: *decimals3
+
+# unsupported on single phase
+#        - name: SMA Grid current phase L3
+#          address: 30981
+#          <<: *int32
+#          <<: *current
+#          <<: *decimals3
           
         - name: SMA Nominal power in Ok Mode
           address: 31085
@@ -410,10 +460,11 @@
           <<: *current
           <<: *decimals3
 
-        - name: SMA Reactive power
-          address: 31497
-          <<: *int32
-          <<: *reactivepower
+        # Not supported
+        #- name: SMA Reactive power
+        #  address: 31497
+        #  <<: *int32
+        #  <<: *reactivepower
           
         - name: DC current input C
           address: 31793
@@ -426,95 +477,114 @@
           <<: *int32
           <<: *current
           <<: *decimals3
+
+        # Not supported
+        #- name: SMA Standby status
+        #  address: 33001
+        #  <<: *uint32
+
+        # Not supported
+        # - name: SMA Operating status
+        #   address: 33003
+        #   <<: *uint32
           
-        - name: SMA Standby status
-          address: 33001
-          <<: *uint32
+        # Not supported
+        #- name: SMA Active reactive power range
+        #  address: 33007
+        #  <<: *uint32
 
-        - name: SMA Operating status
-          address: 33003
-          <<: *uint32
+        # Not supported
+        #- name: 'SMA cos φ(U), max. number of support points'
+        #  address: 33011
+        #  <<: *uint32    
+
+        # Not supported
+        #- name: 'SMA Q(P), max. number of support points'
+        #  address: 33013
+        #  <<: *uint32          
           
-        - name: SMA Active reactive power range
-          address: 33007
-          <<: *uint32
-          
-        - name: 'SMA cos φ(U), max. number of support points'
-          address: 33011
-          <<: *uint32    
-          
-        - name: 'SMA Q(P), max. number of support points'
-          address: 33013
-          <<: *uint32          
-          
-        - name: 'SMA cos φ(P), max. number of support points'
-          address: 33015
-          <<: *uint32
+        # Not supported
+        #- name: 'SMA cos φ(P), max. number of support points'
+        #  address: 33015
+        #  <<: *uint32
 
-        - name: SMA Rated active power WMaxInRtg
-          address: 33019
-          <<: *int32          
-          <<: *power
+        # Not supported
+        #- name: SMA Rated active power WMaxInRtg
+        #  address: 33019
+        #  <<: *int32          
+        #  <<: *power
 
-        - name: SMA Rated apparent power VAMaxOutRtg
-          address: 33025
-          <<: *uint32
-          <<: *apparentpower
+        # Not supported
+        #- name: SMA Rated apparent power VAMaxOutRtg
+        #  address: 33025
+        #  <<: *uint32
+        #  <<: *apparentpower
 
-        - name: SMA Rated apparent power VAMaxInRtg
-          address: 33027
-          <<: *uint32
-          <<: *apparentpower
-          
-        - name: SMA Rated reactive power VArMaxQ1Rtg
-          address: 33029
-          <<: *int32
-          <<: *reactivepower
+        # Not supported
+        #- name: SMA Rated apparent power VAMaxInRtg
+        #  address: 33027
+        #  <<: *uint32
+        #  <<: *apparentpower
 
-        - name: SMA Rated reactive power VArMaxQ2Rtg
-          address: 33031
-          <<: *int32
-          <<: *reactivepower
+        # Not supported
+        #- name: SMA Rated reactive power VArMaxQ1Rtg
+        #  address: 33029
+        #  <<: *int32
+        #  <<: *reactivepower
 
-        - name: SMA Rated reactive power VArMaxQ3Rtg
-          address: 33033
-          <<: *int32
-          <<: *reactivepower
+        # Not supported
+        #- name: SMA Rated reactive power VArMaxQ2Rtg
+        #  address: 33031
+        #  <<: *int32
+        #  <<: *reactivepower
 
-        - name: SMA Rated reactive power VArMaxQ4Rtg
-          address: 33035
-          <<: *int32
-          <<: *reactivepower
+        # Not supported
+        #- name: SMA Rated reactive power VArMaxQ3Rtg
+        #  address: 33033
+        #  <<: *int32
+        #  <<: *reactivepower
 
-        - name: 'SMA Rated cos φ PFMinQ1Rtg'
-          address: 33037
-          <<: *uint32
-          <<: &decimals4
-            scale: 0.0001
-            precision: 4
+        # Not supported
+        #- name: SMA Rated reactive power VArMaxQ4Rtg
+        #  address: 33035
+        #  <<: *int32
+        #  <<: *reactivepower
 
-        - name: 'SMA Rated cos φ PFMinQ2Rtg'
-          address: 33039
-          <<: *uint32
-          <<: *decimals4
+# not supported
+#        - name: 'SMA Rated cos φ PFMinQ1Rtg'
+#          address: 33037
+#          <<: *uint32
+#          <<: &decimals4
+#            scale: 0.0001
+#            precision: 4
 
-        - name: 'SMA Rated cos φ PFMinQ3Rtg'
-          address: 33041
-          <<: *uint32
-          <<: *decimals4
+# not supported
+#        - name: 'SMA Rated cos φ PFMinQ2Rtg'
+#          address: 33039
+#          <<: *uint32
+#          <<: *decimals4
 
-        - name: 'SMA Rated cos φ PFMinQ4Rtg'
-          address: 33043
-          <<: *uint32
-          <<: *decimals4
+# not supported
+#        - name: 'SMA Rated cos φ PFMinQ3Rtg'
+#          address: 33041
+#          <<: *uint32
+#          <<: *decimals4
 
-        - name: 'SMA Q(V), max. number of support points'
-          address: 33045
-          <<: *uint32
+# not supported
+#        - name: 'SMA Rated cos φ PFMinQ4Rtg'
+#          address: 33043
+#          <<: *uint32
+#          <<: *decimals4
 
-        - name: 'SMA P(U), max. number of support points'
-          address: 33047
-          <<: *uint32
+#not supported
+#        - name: 'SMA Q(V), max. number of support points'
+#          address: 33045
+#          <<: *uint32
+
+#not supported
+#        - name: 'SMA P(U), max. number of support points'
+#          address: 33047
+#          <<: *uint32
 
         - name: Internal temperature B
           address: 34113
@@ -522,29 +592,34 @@
           <<: *temperature
           <<: *decimals1
 
-        - name: SMA Number of events for user B
+        - name: SMA Number of events for user
           address: 35377
           <<: *uint64  
-
-        - name: SMA Number of events for installer B
+          <<: *readdaily
+          
+        - name: SMA Number of events for installer
           address: 35381
           <<: *uint64  
-          
-        - name: SMA Number of events for service B
+          <<: *readdaily
+
+        - name: SMA Number of events for service
           address: 35385
           <<: *uint64  
-
-        - name: 'SMA DC voltage control type'
-          address: 40007
-          <<: *uint32
+          <<: *readdaily
+          
+# no value
+#        - name: 'SMA DC voltage control type'
+#          address: 40007
+#          <<: *uint32
           
         - name: 'General operating mode'
           address: 40009
           <<: *uint32
-          
+
         - name: 'SMA Language of the user interface'
           address: 40013
           <<: *uint32
+          <<: *readdaily
  
         - name: 'SMA General operating status'
           address: 40029
@@ -553,51 +628,64 @@
         - name: 'SMA Firmware version of the main processor'
           address: 40063
           <<: *uint32
-           
+          <<: *readdaily
+          
         - name: 'SMA Firmware version of the logic component'
           address: 40065
           <<: *uint32
-           
+          <<: *readdaily
+          
         - name: 'SMA Frequency monitoring, lower minimum threshold'
           address: 40101
           <<: *uint32
           <<: *frequency
           <<: *decimals2
-          
+          <<: *readdaily
+
         - name: 'SMA Frequency monitoring upper maximum threshold'
           address: 40103
           <<: *uint32
           <<: *frequency
           <<: *decimals2
-          
+          <<: *readdaily
+
         - name: 'SMA Country standard set'
           address: 40109
           <<: *uint32
-
+          <<: *readdaily
+          
         - name: 'SMA Nominal frequency'
           address: 40135
           <<: *uint32
           <<: *frequency
           <<: *decimals2
+          <<: *readonce          
 
         - name: 'SMA Automatic speedwire configureation switched on'
           address: 40157
           <<: *uint32
-
+          <<: *readdaily
+            
         - name: 'SMA Spdwr.Ip'
           address: 40159
           <<: &string8
             data_type: string
             count: 8
             slave: 3
+          <<: *readeveryhour          
+
 
         - name: 'SMA Spdwr.SnetMsk'
           address: 40167
           <<: *string8
+          <<: *readeveryhour          
+
 
         - name: 'SMA Spdwr.GwIp'
           address: 40175        
           <<: *string8
+          <<: *readeveryhour          
+
 
 
 
