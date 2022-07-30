@@ -228,6 +228,28 @@
             } %}
             {% set state = states('sensor.sma_reason_for_derating') %}
             {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
+            
+        - name: SMA Speedwire connection status of SMACOM A template
+          state: > 
+            {% set mapper =  {
+            '35': 'Fault',
+            '307': 'Ok',
+            '455': 'Warning',
+            '1725': 'No connection'
+            } %}
+            {% set state = states('sensor.sma_speedwire_connection_status_of_smacom_a') %}
+            {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
+
+        - name: SMA Speedwire connection status of SMACOM B template
+          state: > 
+            {% set mapper =  {
+            '35': 'Fault',
+            '307': 'Ok',
+            '455': 'Warning',
+            '1725': 'No connection'
+            } %}
+            {% set state = states('sensor.sma_speedwire_connection_status_of_smacom_b') %}
+            {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
 
 
 ####### not popultaed in low power ####### 
@@ -345,11 +367,20 @@
           unit_of_measurement: VAr
           device_class: reactive_power
           state: > 
-            {% if is_state('sensor.sma_reactive_power_l1','-2147483.648') %} 0
+            {% if is_state('sensor.sma_reactive_power_l1','-2147483648') %} 0
             {% else %} {{ states('sensor.sma_reactive_power_l1') }} 
             {% endif %}
             
+        - name: SMA Residual current template
+          unit_of_measurement: A
+          device_class: current
+          state: > 
+            {% if is_state('sensor.sma_residual_current','-2147483.648') %} 0
+            {% else %} {{ states('sensor.sma_residual_current') }} 
+            {% endif %}
             
+            
+                        
             
             
 
