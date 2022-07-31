@@ -13,7 +13,10 @@ add the file modbus.yaml to config folder (where configuration.yaml is)
 
 then add this into configuration.yaml to reference it:
 > modbus: !include modbus.yaml
+
 > homeassistant:
+
 >   packages:
+
 >     modbustemplate: !include modbus_template.yaml  
 
