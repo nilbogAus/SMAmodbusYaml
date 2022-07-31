@@ -12,11 +12,8 @@ NB: At night some SMA inverters go into low power mode when not generating and s
 add the file modbus.yaml to config folder (where configuration.yaml is)
 
 then add this into configuration.yaml to reference it:
-> modbus: !include modbus.yaml
-
-> homeassistant:
-
->   packages:
-
->     modbustemplate: !include modbus_template.yaml  
+> modbus: !include modbus.yaml <br>
+> homeassistant: <br>
+>&nbsp; packages: <br>
+>&nbsp;&nbsp; modbustemplate: !include modbus_template.yaml  
 
