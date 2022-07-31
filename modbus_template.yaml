@@ -56,15 +56,14 @@
             {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
 
         - name: SMA Connection speed of SMACOM B template
-          state: > 
-            {% set mapper =  {
+          state: >
+            {% set mapper = {
                 '302': 'None',
                 '1720': '10 Mbit/s',
                 '1721': '100 Mbit/s' 
             } %}
-            {% set state = states('sensor.sma_connection_speed_of_smacom_b') %}
-            {{ mapper[state] if state in mapper else 'Unknown('+state+')' }}
-
+            {% set state = states('sensor.sma_connection_speed_of_smacom_B') %}
+            {{ mapper[state] if state in mapper else 'Unknown('+state+')' }} ({{ states('sensor.sma_connection_speed_of_smacom_b') }})  ## have to include second fvalue or it glitches maybe bug
 
         - name: SMA Country standard set template
           state: > 
@@ -499,6 +498,26 @@
           unit_of_measurement: W
           device_class: power
           state: > 
-            {% if is_state('sensor.sma_dc_current_input_b','-2147483.648') %} 0 
+            {% if is_state('sensor.sma_dc_current_input_b','-2147483.648') %} {{ 0 | float }} 
             {% else %} {{ states('sensor.sma_dc_current_input_b') | float * states('sensor.grid_voltage_phase_l1') | float }} 
             {% endif %}
+            
+        - name: SMA combined AB string Amp x Volt
+          unit_of_measurement: W
+          device_class: power
+          state: > 
+             {{ states('sensor.sma_string_a_ac_power_template') | float + states('sensor.sma_string_b_ac_power_template') | float }} 
+
+        - name: SMA combined AB string Amp x Volt x factor
+          unit_of_measurement: W
+          device_class: power
+          state: >        
+           {{ ( states('sensor.sma_string_a_ac_power_template') | float + states('sensor.sma_string_b_ac_power_template') | float ) * states('sensor.sma_displacement_power_factor_template') | float }}
+           
+           
+           
+           
+           
+           
+           
+            
