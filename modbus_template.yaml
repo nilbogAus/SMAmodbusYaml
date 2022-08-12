@@ -1,8 +1,8 @@
-      template:
+template:
 
 ####### Lookup lists ####### 
 
-      - sensor:
+    - sensor:
         - name: SMA Automatic speedwire configureation switched on template
           state: > 
             {% set mapper =  {
@@ -512,7 +512,22 @@
         - name: SMA DC AC Efficiency template
           unit_of_measurement: '%'
           state: > 
-            {{ 1 / states('sensor.sma_dc_current_input_ab_template') | float * states('sensor.sma_grid_current_template') | float * 100 }}
+            {% if is_state('sensor.sma_dc_current_input_ab_template','0.0') %}
+            {% else %} {{ 1 / states('sensor.sma_dc_current_input_ab_template') | float * states('sensor.sma_grid_current_template') | float * 100 }}
+            {% endif %}
+
+
+sensor:
+    - platform: filter
+      name: "SMA reverse lowpass 20 DC AC Efficiency template filtered"
+      entity_id: sensor.sma_dc_ac_efficiency_template
+      filters:
+        - filter: lowpass
+          time_constant: 20 
+        - filter: range
+          upper_bound: 100
+
+  
 
 
 

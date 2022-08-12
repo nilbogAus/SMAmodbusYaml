@@ -213,7 +213,7 @@
           <<: *int32
           <<: *energy
 
-        - name: sma_power
+        - name: SMA power
           address: 30775
           <<: *int32
           <<: *power
