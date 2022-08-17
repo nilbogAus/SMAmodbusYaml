@@ -487,71 +487,92 @@ template:
 ####### calculated values ####### 
 
 
-        - name: SMA String A AC power template
+        - name: SMA String A AC power Calc
           unit_of_measurement: W
           device_class: power
           state: > 
             {% if is_state('sensor.sma_dc_current_input_a','-2147483.648') %} {{ 0 | float }}
-            {% else %} {{ states('sensor.sma_dc_current_input_a') | float * states('sensor.grid_voltage_phase_l1') | float }} 
+            {% else %} {{ states('sensor.sma_dc_current_input_a') | float * states('sensor.sma_dc_voltage_input_a_template') | float }} 
             {% endif %}
 
-        - name: SMA String B AC Power template
+        - name: SMA String B AC Power Calc
           unit_of_measurement: W
           device_class: power
           state: > 
             {% if is_state('sensor.sma_dc_current_input_b','-2147483.648') %} {{ 0 | float }} 
-            {% else %} {{ states('sensor.sma_dc_current_input_b') | float * states('sensor.grid_voltage_phase_l1') | float }} 
+            {% else %} {{ states('sensor.sma_dc_current_input_b') | float * states('sensor.sma_dc_voltage_input_b_template') | float }} 
             {% endif %}
 
-        - name: SMA DC Current Input AB template
-          unit_of_measurement: A
-          device_class: current
+        - name: SMA String AB AC Power Calc
+          unit_of_measurement: W
+          device_class: power
           state: > 
-             {{ states('sensor.sma_dc_current_input_a_template') | float + states('sensor.sma_dc_current_input_b_template') | float }} 
+            {{ states('sensor.sma_string_a_ac_power_calc') | float + states('sensor.sma_string_b_ac_power_calc') | float }} 
 
-        - name: SMA DC AC Efficiency template
+        - name: SMA DC AC Efficiency Calc
           unit_of_measurement: '%'
           state: > 
-            {% if is_state('sensor.sma_dc_current_input_ab_template','0.0') %}
-            {% else %} {{ 1 / states('sensor.sma_dc_current_input_ab_template') | float * states('sensor.sma_grid_current_template') | float * 100 }}
+            {% if is_state('sensor.sma_string_ab_ac_power_calc','0.0') %}
+            {% else %} {{ 100 / states('sensor.sma_string_ab_ac_power_calc') | float * states('sensor.sma_power_template') | float  }}
             {% endif %}
+            
+            
 
-        - name: SMA String A AC power template Efficiency
-          unit_of_measurement: W
-          device_class: power
-          state: > 
-            {% if is_state('sensor.sma_dc_current_input_a','-2147483.648') %} {{ 0 | float }}
-            {% else %} {{ states('sensor.sma_dc_current_input_a') | float * states('sensor.grid_voltage_phase_l1') | float * states('sensor.sma_dc_ac_efficiency_template_filtered') | float / 100 }} 
-            {% endif %}
-
-        - name: SMA String B AC Power template Efficiency
-          unit_of_measurement: W
-          device_class: power
-          state: > 
-            {% if is_state('sensor.sma_dc_current_input_b','-2147483.648') %} {{ 0 | float }} 
-            {% else %} {{ states('sensor.sma_dc_current_input_b') | float * states('sensor.grid_voltage_phase_l1') | float * states('sensor.sma_dc_ac_efficiency_template_filtered') | float / 100 }} 
-            {% endif %}
-
-        - name: SMA DC Current Input AB template Efficiency
-          unit_of_measurement: A
-          device_class: current
-          state: > 
-             {{ states('sensor.sma_dc_current_input_a_template') | float + states('sensor.sma_dc_current_input_b_template') | float * states('sensor.sma_dc_ac_efficiency_template_filtered') | float / 100 }} 
 
 
 
 sensor:
     - platform: filter
-      name: "SMA DC AC Efficiency template filtered"
-      entity_id: sensor.sma_dc_ac_efficiency_template
+      name: "SMA DC AC Efficiency template lowpass filtered"
+      entity_id: sensor.sma_dc_ac_efficiency_calc
       filters:
         - filter: lowpass
           time_constant: 20 
         - filter: range
           upper_bound: 100
 
-  
+    - platform: filter
+      name: "SMA DC AC Efficiency template outlier filtered"
+      entity_id: sensor.sma_dc_ac_efficiency_calc
+      filters:
+        - filter: outlier
+          radius: 5.0
+          window_size: 3 
+        - filter: range
+          upper_bound: 100
+          
+    - platform: filter
+      name: "SMA DC AC Efficiency template time_throttle filtered"
+      entity_id: sensor.sma_dc_ac_efficiency_calc
+      filters:
+        - filter: time_throttle
+          window_size: 00:01 
+        - filter: range
+          upper_bound: 100
+          
+    - platform: filter
+      name: "SMA DC AC Efficiency template all time_throttle outlier filtered"
+      entity_id: sensor.sma_dc_ac_efficiency_calc
+      filters:
+        - filter: time_throttle
+          window_size: 00:01       
+        - filter: outlier
+          radius: 5.0
+          window_size: 3 
+        - filter: range
+          upper_bound: 100          
 
-
-
+    - platform: filter
+      name: "SMA DC AC Efficiency template all filtered"
+      entity_id: sensor.sma_dc_ac_efficiency_calc
+      filters:
+        - filter: time_throttle
+          window_size: 00:01       
+        - filter: outlier
+          radius: 5.0
+          window_size: 3 
+        - filter: lowpass
+          time_constant: 20 
+        - filter: range
+          upper_bound: 100
 
